@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visor y Validador de Ficheros .DEN</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .table-container {
+            max-height: 70vh;
+            overflow: auto;
+        }
+        th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans p-6">
+
+    <div class="max-w-full mx-auto bg-white rounded-xl shadow-md p-6">
+        <h1 class="text-2xl font-bold text-slate-900 mb-2">Visor y Validador de Archivos .DEN</h1>
+        <p class="text-sm text-slate-600 mb-6">Carga un archivo con extensión <code>.den</code> para analizar y verificar la alineación de sus campos posicionales[cite: 2].</p>
+
+        <div class="mb-6 p-4 border-2 border-dashed border-slate-300 rounded-lg flex flex-col md:flex-row items-center justify-between gap-4 bg-slate-50">
+            <input type="file" id="fileInput" accept=".den,.txt" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer"/>
+            <div id="stats" class="text-sm text-slate-600 font-medium whitespace-nowrap">Registros procesados: 0</div>
+        </div>
+
+        <div class="table-container border border-slate-200 rounded-lg shadow-inner bg-white">
+            <table class="w-full text-xs text-left border-collapse" id="denTable">
+                <thead class="bg-slate-800 text-white font-mono" id="tableHeader">
+                    </thead>
+                <tbody id="tableBody" class="font-mono divide-y divide-slate-200">
+                    <tr>
+                        <td class="p-4 text-center text-slate-400 italic" colspan="100">Carga un archivo .den para ver el desglose posicional.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Estructura completa de campos mapeada desde la especificación del documento .DEN
+        const denFields = [
+            // Datos identificativos del expediente
+            { pos: 1, len: 8, name: "Código de Institución", type: "A" }, [cite: 4]
+            { pos: 9, len: 15, name: "Id. de boletín", type: "A" }, [cite: 4]
+            { pos: 24, len: 14, name: "Fecha de la infracción", type: "N" }, [cite: 4]
+            
+            // Datos identificativos de la infracción
+            { pos: 38, len: 3, name: "Código de legislación", type: "A" }, [cite: 6]
+            { pos: 41, len: 3, name: "Artículo de la infracción", type: "A" }, [cite: 6]
+            { pos: 44, len: 3, name: "Apartado de la infracción", type: "A" }, [cite: 6]
+            { pos: 47, len: 3, name: "Opción de la Infracción", type: "A" }, [cite: 6]
+            { pos: 50, len: 240, name: "Hecho denunciado", type: "A" }, [cite: 6]
+            { pos: 290, len: 100, name: "Anexo", type: "A" }, [cite: 6]
+            { pos: 390, len: 1, name: "Notificado en mano", type: "A" }, [cite: 6]
+            { pos: 391, len: 4, name: "Motivo de no notificación en mano", type: "N" }, [cite: 6]
+
+            // Localización de la infracción
+            { pos: 395, len: 5, name: "Código de calle infracción", type: "N" }, [cite: 8]
+            { pos: 400, len: 5, name: "Siglas de calle infracción", type: "A" }, [cite: 8]
+            { pos: 405, len: 50, name: "Nombre de calle infracción", type: "A" }, [cite: 8]
+            { pos: 455, len: 4, name: "Número 1 vía infracción", type: "N" }, [cite: 8]
+            { pos: 459, len: 1, name: "Duplicado vía infracción", type: "A" }, [cite: 9]
+            { pos: 460, len: 100, name: "Info complementaria lugar", type: "A" }, [cite: 9]
+
+            // Datos del infractor
+            { pos: 560, len: 60, name: "Nombre completo Infractor", type: "A" }, [cite: 11]
+            { pos: 620, len: 2, name: "Acrónimo Infractor", type: "A" }, [cite: 11]
+            { pos: 622, len: 15, name: "DNI/NIF Infractor", type: "A" }, [cite: 11]
+            { pos: 637, len: 1, name: "Dígito control Infractor", type: "A" }, [cite: 11]
+            { pos: 638, len: 1, name: "Tipo persona Infractor", type: "A" }, [cite: 11]
+            { pos: 639, len: 5, name: "Código calle dirección Infractor", type: "N" }, [cite: 11]
+            { pos: 644, len: 5, name: "Siglas calle dirección Infractor", type: "A" }, [cite: 11]
+            { pos: 649, len: 50, name: "Nombre calle dirección Infractor", type: "A" }, [cite: 11]
+            { pos: 699, len: 4, name: "Número inicial dirección Infractor", type: "N" }, [cite: 11]
+            { pos: 703, len: 1, name: "Letra inicial dirección Infractor", type: "A" }, [cite: 11]
+            { pos: 704, len: 4, name: "Número final dirección Infractor", type: "N" }, [cite: 11]
+            { pos: 708, len: 1, name: "Letra final dirección Infractor", type: "A" }, [cite: 11]
+            { pos: 709, len: 1, name: "Indicador Km/Manz Infractor", type: "A" }, [cite: 11]
+            { pos: 710, len: 6, name: "Número Km/Manz Infractor", type: "N" }, [cite: 11]
+            { pos: 716, len: 1, name: "Indicador BL./Pol. Infractor", type: "A" }, [cite: 11]
+            { pos: 717, len: 4, name: "Descriptor Bl./Pol. Infractor", type: "A" }, [cite: 11]
+            { pos: 721, len: 25, name: "Toponimia dirección Infractor", type: "A" }, [cite: 11]
+            { pos: 746, len: 2, name: "Escalera dirección Infractor", type: "A" }, [cite: 11]
+            { pos: 748, len: 3, name: "Planta dirección Infractor", type: "A" }, [cite: 11]
+            { pos: 751, len: 4, name: "Puerta dirección Infractor", type: "A" }, [cite: 11]
+            { pos: 755, len: 5, name: "Código Postal Infractor", type: "A" }, [cite: 11]
+            { pos: 760, len: 3, name: "Código municipio Infractor", type: "N" }, [cite: 11]
+            { pos: 763, len: 60, name: "Municipio Infractor", type: "A" }, [cite: 11]
+            { pos: 823, len: 2, name: "Código provincia Infractor", type: "N" }, [cite: 11]
+            { pos: 825, len: 60, name: "Provincia Infractor", type: "A" }, [cite: 11]
+            { pos: 885, len: 3, name: "Código país Infractor", type: "N" }, [cite: 12]
+            { pos: 888, len: 60, name: "País Infractor", type: "A" }, [cite: 12]
+            { pos: 948, len: 15, name: "Nº permiso conducir Infractor", type: "A" }, [cite: 12]
+            { pos: 963, len: 50, name: "Lugar expedición permiso", type: "A" }, [cite: 12]
+            { pos: 1013, len: 8, name: "Fecha expedición permiso", type: "N" }, [cite: 12]
+            { pos: 1021, len: 2, name: "Clase permiso conducir", type: "A" }, [cite: 12]
+            { pos: 1023, len: 4, name: "Código categoría Infractor", type: "A" }, [cite: 12]
+            { pos: 1027, len: 1, name: "Indicador si infractor es titular", type: "A" }, [cite: 12]
+
+            // Agentes denunciantes e instrumentos
+            { pos: 1028, len: 8, name: "Código de agente 1", type: "A" }, [cite: 14]
+            { pos: 1036, len: 8, name: "Código de agente 2", type: "A" }, [cite: 14]
+            { pos: 1044, len: 6, name: "Código de grúa", type: "A" }, [cite: 14]
+            { pos: 1050, len: 6, name: "Código del aparato utilizado", type: "A" }, [cite: 14]
+
+            // Datos del vehículo
+            { pos: 1056, len: 1, name: "Indicador formato matrícula", type: "N" }, [cite: 16]
+            { pos: 1057, len: 14, name: "Matrícula", type: "A" }, [cite: 16]
+            { pos: 1071, len: 4, name: "Tipo de vehículo", type: "N" }, [cite: 16]
+            { pos: 1075, len: 20, name: "Marca del vehículo", type: "A" }, [cite: 16]
+            { pos: 1095, len: 20, name: "Color del vehículo", type: "A" }, [cite: 16]
+            { pos: 1115, len: 6, name: "TARA del vehículo", type: "N" }, [cite: 16]
+            { pos: 1121, len: 6, name: "Peso máximo autorizado", type: "N" }, [cite: 16]
+            { pos: 1127, len: 100, name: "Observaciones", type: "A" }, [cite: 16]
+
+            // Claves de cobro C60
+            { pos: 1227, len: 4, name: "Fecha inicio Ejercicio", type: "N" }, [cite: 18]
+            { pos: 1231, len: 12, name: "Ref. C60 sin descuento", type: "N" }, [cite: 18]
+            { pos: 1243, len: 3, name: "Concepto C60", type: "N" }, [cite: 18]
+            { pos: 1246, len: 2, name: "Remesa C60", type: "N" }, [cite: 18]
+            { pos: 1248, len: 8, name: "Fecha límite pago banco", type: "N" }, [cite: 18]
+            { pos: 1256, len: 11, name: "Importe sin descuento", type: "N" }, [cite: 18]
+            { pos: 1267, len: 12, name: "Ref. C60 con descuento", type: "N" }, [cite: 18]
+            { pos: 1279, len: 3, name: "Concepto C60", type: "N" }, [cite: 18]
+            { pos: 1282, len: 2, name: "Remesa C60", type: "N" }, [cite: 18]
+            { pos: 1284, len: 8, name: "Fecha límite pago banco", type: "N" }, [cite: 18]
+            { pos: 1292, len: 11, name: "Importe con descuento", type: "N" } [cite: 18]
+        ];
+
+        // Construir Encabezados de la Tabla
+        function renderTableHeader() {
+            const headerElement = document.getElementById('tableHeader');
+            let tr1 = '<tr class="border-b border-slate-700 bg-slate-900 text-slate-300"><th class="p-2 text-center border-r border-slate-700 min-w-[50px]">#</th><th class="p-2 text-center border-r border-slate-700 min-w-[70px]">Estado</th>';
+            
+            denFields.forEach(field => {
+                tr1 += `<th class="p-2 border-r border-slate-700 whitespace-nowrap min-w-[120px]">
+                            <div class="text-xs font-semibold">${field.name}</div>
+                            <div class="text-[10px] text-blue-400">Pos: ${field.pos} | Long: ${field.len}</div>
+                        </th>`;
+            });
+            tr1 += '</tr>';
+            headerElement.innerHTML = tr1;
+        }
+
+        // Leer Archivo .DEN
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                // Separar por líneas
+                const lines = content.split(/\r?\n/).filter(line => line.length > 0);
+                parseDENContent(lines);
+            };
+            reader.readAsText(file, 'ISO-8859-1'); // Codificación estándar de ficheros plano en España
+        });
+
+        // Parsear líneas y generar filas de tabla
+        function parseDENContent(lines) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            document.getElementById('stats').innerText = `Registros procesados: ${lines.length}`;
+
+            lines.forEach((line, index) => {
+                const tr = document.createElement('tr');
+                tr.className = index % 2 === 0 ? 'bg-white hover:bg-slate-50' : 'bg-slate-50 hover:bg-slate-100';
+
+                // Validar longitud esperada de registro (mínimo 1302 caracteres)
+                const isCorrectLength = line.length >= 1302;
+                const statusBadge = isCorrectLength 
+                    ? '<span class="px-1.5 py-0.5 text-[10px] bg-green-100 text-green-800 rounded font-bold">OK</span>'
+                    : `<span class="px-1.5 py-0.5 text-[10px] bg-red-100 text-red-800 rounded font-bold" title="Longitud: ${line.length}">ERR</span>`;
+
+                let rowHTML = `<td class="p-2 text-center border-r border-slate-200 font-bold text-slate-500">${index + 1}</td>`;
+                rowHTML += `<td class="p-2 text-center border-r border-slate-200">${statusBadge}</td>`;
+
+                denFields.forEach(field => {
+                    // Posicionamiento basado en índice 0 (pos - 1)
+                    const startIndex = field.pos - 1;
+                    const val = line.substring(startIndex, startIndex + field.len);
+                    
+                    // Reemplazar espacios para visualizar la alineación de datos
+                    const displayVal = val !== "" ? val : '<span class="text-slate-300"></span>';
+
+                    rowHTML += `<td class="p-2 border-r border-slate-200 whitespace-pre font-mono text-slate-700 bg-opacity-10">${displayVal}</td>`;
+                });
+
+                tr.innerHTML = rowHTML;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Inicializar tabla al cargar la página
+        renderTableHeader();
+    </script>
+</body>
+</html>
