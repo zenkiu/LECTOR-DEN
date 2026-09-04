@@ -248,27 +248,57 @@
             z-index: 10;
         }
 
+        /* --- ESTILOS DE LA REGLA GUÍA DE POSICIONES --- */
+        tr.ruler-row {
+            background-color: #0f172a;
+        }
+
+        th.ruler-cell {
+            padding: 0.25rem;
+            font-size: 0.65rem;
+            font-weight: bold;
+            color: #38bdf8;
+            text-align: center;
+            border-bottom: 1px dashed #334155;
+            background-color: #0f172a;
+            letter-spacing: 0.5px;
+        }
+
         th {
             padding: 0.5rem;
             border-right: 1px solid #334155;
             white-space: nowrap;
             min-width: 140px;
+            cursor: help;
         }
 
         th.col-fixed {
             min-width: 50px;
             text-align: center;
+            cursor: default;
         }
 
         th.col-status {
             min-width: 70px;
             text-align: center;
+            cursor: default;
         }
 
         th.col-len {
             min-width: 110px;
             text-align: center;
             background-color: #0f172a;
+            cursor: default;
+        }
+
+        .header-title {
+            text-decoration: underline dotted #94a3b8;
+        }
+
+        .header-meta {
+            font-size: 0.65rem;
+            color: #94a3b8;
+            font-weight: normal;
         }
 
         tbody {
@@ -388,79 +418,79 @@
 
     <script>
         const denFields = [
-            { pos: 1, len: 8, name: "Código de Institución" },
-            { pos: 9, len: 15, name: "Id. de boletín" },
-            { pos: 24, len: 14, name: "Fecha de la infracción" },
-            { pos: 38, len: 3, name: "Código de legislación" },
-            { pos: 41, len: 3, name: "Artículo de la infracción" },
-            { pos: 44, len: 3, name: "Apartado de la infracción" },
-            { pos: 47, len: 3, name: "Opción de la Infracción" },
-            { pos: 50, len: 240, name: "Hecho denunciado" },
-            { pos: 290, len: 100, name: "Anexo" },
-            { pos: 390, len: 1, name: "Notificado en mano" },
-            { pos: 391, len: 4, name: "Motivo de no notificación en mano" },
-            { pos: 395, len: 5, name: "Código de calle infracción" },
-            { pos: 400, len: 5, name: "Siglas de calle infracción" },
-            { pos: 405, len: 50, name: "Nombre de calle infracción" },
-            { pos: 455, len: 4, name: "Número 1 vía infracción" },
-            { pos: 459, len: 1, name: "Duplicado vía infracción" },
-            { pos: 460, len: 100, name: "Info complementaria lugar" },
-            { pos: 560, len: 60, name: "Nombre completo Infractor" },
-            { pos: 620, len: 2, name: "Acrónimo Infractor" },
-            { pos: 622, len: 15, name: "DNI/NIF Infractor" },
-            { pos: 637, len: 1, name: "Dígito control Infractor" },
-            { pos: 638, len: 1, name: "Tipo persona Infractor" },
-            { pos: 639, len: 5, name: "Código calle dirección Infractor" },
-            { pos: 644, len: 5, name: "Siglas calle dirección Infractor" },
-            { pos: 649, len: 50, name: "Nombre calle dirección Infractor" },
-            { pos: 699, len: 4, name: "Número inicial dirección Infractor" },
-            { pos: 703, len: 1, name: "Letra inicial dirección Infractor" },
-            { pos: 704, len: 4, name: "Número final dirección Infractor" },
-            { pos: 708, len: 1, name: "Letra final dirección Infractor" },
-            { pos: 709, len: 1, name: "Indicador Km/Manz Infractor" },
-            { pos: 710, len: 6, name: "Número Km/Manz Infractor" },
-            { pos: 716, len: 1, name: "Indicador BL./Pol. Infractor" },
-            { pos: 717, len: 4, name: "Descriptor Bl./Pol. Infractor" },
-            { pos: 721, len: 25, name: "Toponimia dirección Infractor" },
-            { pos: 746, len: 2, name: "Escalera dirección Infractor" },
-            { pos: 748, len: 3, name: "Planta dirección Infractor" },
-            { pos: 751, len: 4, name: "Puerta dirección Infractor" },
-            { pos: 755, len: 5, name: "Código Postal Infractor" },
-            { pos: 760, len: 3, name: "Código municipio Infractor" },
-            { pos: 763, len: 60, name: "Municipio Infractor" },
-            { pos: 823, len: 2, name: "Código provincia Infractor" },
-            { pos: 825, len: 60, name: "Provincia Infractor" },
-            { pos: 885, len: 3, name: "Código país Infractor" },
-            { pos: 888, len: 60, name: "País Infractor" },
-            { pos: 948, len: 15, name: "Nº permiso conducir Infractor" },
-            { pos: 963, len: 50, name: "Lugar expedición permiso" },
-            { pos: 1013, len: 8, name: "Fecha expedición permiso" },
-            { pos: 1021, len: 2, name: "Clase permiso conducir" },
-            { pos: 1023, len: 4, name: "Código categoría Infractor" },
-            { pos: 1027, len: 1, name: "Indicador si infractor es titular" },
-            { pos: 1028, len: 8, name: "Código de agente 1" },
-            { pos: 1036, len: 8, name: "Código de agente 2" },
-            { pos: 1044, len: 6, name: "Código de grúa" },
-            { pos: 1050, len: 6, name: "Código del aparato utilizado" },
-            { pos: 1056, len: 1, name: "Indicador formato matrícula" },
-            { pos: 1057, len: 14, name: "Matrícula" },
-            { pos: 1071, len: 4, name: "Tipo de vehículo" },
-            { pos: 1075, len: 20, name: "Marca del vehículo" },
-            { pos: 1095, len: 20, name: "Color del vehículo" },
-            { pos: 1115, len: 6, name: "TARA del vehículo" },
-            { pos: 1121, len: 6, name: "Peso máximo autorizado" },
-            { pos: 1127, len: 100, name: "Observaciones" },
-            { pos: 1227, len: 4, name: "Fecha inicio Ejercicio" },
-            { pos: 1231, len: 12, name: "Ref. C60 sin descuento" },
-            { pos: 1243, len: 3, name: "Concepto C60" },
-            { pos: 1246, len: 2, name: "Remesa C60" },
-            { pos: 1248, len: 8, name: "Fecha límite pago banco" },
-            { pos: 1256, len: 11, name: "Importe sin descuento" },
-            { pos: 1267, len: 12, name: "Ref. C60 con descuento" },
-            { pos: 1279, len: 3, name: "Concepto C60" },
-            { pos: 1282, len: 2, name: "Remesa C60" },
-            { pos: 1284, len: 8, name: "Fecha límite pago banco" },
-            { pos: 1292, len: 11, name: "Importe con descuento" }
+            { pos: 1, len: 8, name: "Código de Institución", obs: 'Valor "Durango"' },
+            { pos: 9, len: 15, name: "Id. de boletín", obs: "No nulo. Formato AAAA-A-99999999 Año-tipo de boletín-nº de boletin secuencial (en el caso de la ORA, el tipo de boletín, tiene un valor 'O')" },
+            { pos: 24, len: 14, name: "Fecha de la infracción", obs: "No nulo. Formato DDMMAAAAHHMMSS" },
+            { pos: 38, len: 3, name: "Código de legislación", obs: "Código de legislación" },
+            { pos: 41, len: 3, name: "Artículo de la infracción", obs: "Articulado de la infracción" },
+            { pos: 44, len: 3, name: "Apartado de la infracción", obs: "" },
+            { pos: 47, len: 3, name: "Opción de la Infracción", obs: "" },
+            { pos: 50, len: 240, name: "Hecho denunciado", obs: "Nulo" },
+            { pos: 290, len: 100, name: "Anexo", obs: "Nulo" },
+            { pos: 390, len: 1, name: "Notificado en mano", obs: 'Valor "N" (no notificado en mano)' },
+            { pos: 391, len: 4, name: "Motivo de no notificación en mano", obs: "Informar este código de entre los posibles motivos de no notificación (en ORA valor '1'); si fuera notificado en mano el campo anterior tendría valor 'S'" },
+            { pos: 395, len: 5, name: "Código de calle infracción", obs: "Si comparte callejero con Durango informar código; si fuera diferente el código sería 0 y crear origen de datos" },
+            { pos: 400, len: 5, name: "Siglas de calle infracción", obs: "" },
+            { pos: 405, len: 50, name: "Nombre de calle infracción", obs: "" },
+            { pos: 455, len: 4, name: "Número 1 vía infracción", obs: "" },
+            { pos: 459, len: 1, name: "Duplicado vía infracción", obs: "" },
+            { pos: 460, len: 100, name: "Info complementaria lugar", obs: "No obligatorio. Complementa la dirección anterior" },
+            { pos: 560, len: 60, name: "Nombre completo Infractor", obs: "Si no hay identificación, toda la info relativa al infractor se mostrará vacía" },
+            { pos: 620, len: 2, name: "Acrónimo Infractor", obs: "'ES' (DNI españoles / residencia); 'EX' en caso contrario" },
+            { pos: 622, len: 15, name: "DNI/NIF Infractor", obs: "" },
+            { pos: 637, len: 1, name: "Dígito control Infractor", obs: "" },
+            { pos: 638, len: 1, name: "Tipo persona Infractor", obs: "F (física) / J (jurídica)" },
+            { pos: 639, len: 5, name: "Código calle dirección Infractor", obs: "" },
+            { pos: 644, len: 5, name: "Siglas calle dirección Infractor", obs: "" },
+            { pos: 649, len: 50, name: "Nombre calle dirección Infractor", obs: "" },
+            { pos: 699, len: 4, name: "Número inicial dirección Infractor", obs: "" },
+            { pos: 703, len: 1, name: "Letra inicial dirección Infractor", obs: "" },
+            { pos: 704, len: 4, name: "Número final dirección Infractor", obs: "" },
+            { pos: 708, len: 1, name: "Letra final dirección Infractor", obs: "" },
+            { pos: 709, len: 1, name: "Indicador Km/Manz Infractor", obs: "" },
+            { pos: 710, len: 6, name: "Número Km/Manz Infractor", obs: "El último dígito se interpreta como decimal y constará aunque valga 0" },
+            { pos: 716, len: 1, name: "Indicador BL./Pol. Infractor", obs: "" },
+            { pos: 717, len: 4, name: "Descriptor Bl./Pol. Infractor", obs: "" },
+            { pos: 721, len: 25, name: "Toponimia dirección Infractor", obs: "" },
+            { pos: 746, len: 2, name: "Escalera dirección Infractor", obs: "" },
+            { pos: 748, len: 3, name: "Planta dirección Infractor", obs: "" },
+            { pos: 751, len: 4, name: "Puerta dirección Infractor", obs: "" },
+            { pos: 755, len: 5, name: "Código Postal Infractor", obs: "" },
+            { pos: 760, len: 3, name: "Código municipio Infractor", obs: "" },
+            { pos: 763, len: 60, name: "Municipio Infractor", obs: "" },
+            { pos: 823, len: 2, name: "Código provincia Infractor", obs: "" },
+            { pos: 825, len: 60, name: "Provincia Infractor", obs: "" },
+            { pos: 885, len: 3, name: "Código país Infractor", obs: "108 (España)" },
+            { pos: 888, len: 60, name: "País Infractor", obs: "" },
+            { pos: 948, len: 15, name: "Nº permiso conducir Infractor", obs: "" },
+            { pos: 963, len: 50, name: "Lugar expedición permiso", obs: "" },
+            { pos: 1013, len: 8, name: "Fecha expedición permiso", obs: "DDMMAAAA" },
+            { pos: 1021, len: 2, name: "Clase permiso conducir", obs: "" },
+            { pos: 1023, len: 4, name: "Código categoría Infractor", obs: "Opcional, se puede informar algún valor de la tabla de Categorías de infractor" },
+            { pos: 1027, len: 1, name: "Indicador si infractor es titular", obs: "" },
+            { pos: 1028, len: 8, name: "Código de agente 1", obs: "No nulo. Código de la Tabla de Agentes (Se puede dar de alta uno genérico)" },
+            { pos: 1036, len: 8, name: "Código de agente 2", obs: "Opcional. Si está informado, debe ser un código de la tabla de agentes" },
+            { pos: 1044, len: 6, name: "Código de grúa", obs: "Opcional. Si está informado, debe ser un código de la tabla Grúas" },
+            { pos: 1050, len: 6, name: "Código del aparato utilizado", obs: "Opcional. Si está informado, debe ser un código de la tabla Instrumentos de medida" },
+            { pos: 1056, len: 1, name: "Indicador formato matrícula", obs: "Valor 1 (formato IVTM)" },
+            { pos: 1057, len: 14, name: "Matrícula", obs: "No nulo. Formato XX-999999-XXX (se deben mantener posiciones y formato; ej. -1866 -DLN)" },
+            { pos: 1071, len: 4, name: "Tipo de vehículo", obs: "No nulo. Códigos: 1-TURISMO 2-AUTOBUS 3-CAMIÓN 4-TRACTOR 5-REMOLQUE 6-CICLOMOTOR 7-MOTOCICLETA 9-BICICLETA" },
+            { pos: 1075, len: 20, name: "Marca del vehículo", obs: "De informarse debe corresponderse con la tabla adjunta o darse de alta al cargar" },
+            { pos: 1095, len: 20, name: "Color del vehículo", obs: "Opcional" },
+            { pos: 1115, len: 6, name: "TARA del vehículo", obs: "Opcional" },
+            { pos: 1121, len: 6, name: "Peso máximo autorizado", obs: "Opcional" },
+            { pos: 1127, len: 100, name: "Observaciones", obs: "Opcional" },
+            { pos: 1227, len: 4, name: "Fecha inicio Ejercicio", obs: "Opcional (Claves de cobro)" },
+            { pos: 1231, len: 12, name: "Ref. C60 sin descuento", obs: "Opcional (Claves de cobro)" },
+            { pos: 1243, len: 3, name: "Concepto C60", obs: "Opcional (Claves de cobro)" },
+            { pos: 1246, len: 2, name: "Remesa C60", obs: "Opcional (Claves de cobro)" },
+            { pos: 1248, len: 8, name: "Fecha límite pago banco", obs: "Opcional (Claves de cobro)" },
+            { pos: 1256, len: 11, name: "Importe sin descuento", obs: "Opcional (Claves de cobro)" },
+            { pos: 1267, len: 12, name: "Ref. C60 con descuento", obs: "Opcional (Claves de cobro)" },
+            { pos: 1279, len: 3, name: "Concepto C60", obs: "Opcional (Claves de cobro)" },
+            { pos: 1282, len: 2, name: "Remesa C60", obs: "Opcional (Claves de cobro)" },
+            { pos: 1284, len: 8, name: "Fecha límite pago banco", obs: "Opcional (Claves de cobro)" },
+            { pos: 1292, len: 11, name: "Importe con descuento", obs: "Opcional (Claves de cobro)" }
         ];
 
         let linesA = [];
@@ -485,22 +515,35 @@
             topDummy.style.width = denTable.offsetWidth + 'px';
         }
 
+        // --- DIBUJO DE CABECERA CON REGLA GUÍA SUPERIOR ---
         function renderTableHeader() {
             const headerElement = document.getElementById('tableHeader');
-            let tr1 = `<tr>
+            
+            // Fila 1: Regla guía con números de posición de inicio
+            let rulerRow = `<tr class="ruler-row">
+                <th class="ruler-cell" colspan="4">📏 POS. INICIO ➔</th>`;
+            denFields.forEach(field => {
+                rulerRow += `<th class="ruler-cell">[ P: ${field.pos} ]</th>`;
+            });
+            rulerRow += '</tr>';
+
+            // Fila 2: Títulos principales del campo
+            let mainHeaderRow = `<tr>
                 <th class="col-fixed">#</th>
                 <th class="col-fixed">Fich.</th>
                 <th class="col-status">Estado</th>
                 <th class="col-len">Longitud Bytes</th>`;
             
             denFields.forEach(field => {
-                tr1 += `<th>
+                const tooltipText = field.obs ? `Observaciones: ${field.obs}` : "Sin observaciones específicas";
+                mainHeaderRow += `<th title="${tooltipText}">
                             <div class="header-title">${field.name}</div>
                             <div class="header-meta">Pos: ${field.pos} | Long: ${field.len}</div>
                         </th>`;
             });
-            tr1 += '</tr>';
-            headerElement.innerHTML = tr1;
+            mainHeaderRow += '</tr>';
+
+            headerElement.innerHTML = rulerRow + mainHeaderRow;
         }
 
         function processFileText(text) {
@@ -657,7 +700,6 @@
             return tr;
         }
 
-        // Sanitización para convertir Ñ -> N, remover acentos y caracteres multibyte
         function sanitizeText(str) {
             return str
                 .replace(/[Ñ]/g, 'N')
@@ -676,14 +718,32 @@
                 .replace(/[^\x00-\x7F]/g, ' ');
         }
 
-        // Exportación con garantía de 1 carácter = 1 byte
+        function setFieldValue(charArray, startPos, length, value, padChar = " ", padLeft = false) {
+            let strVal = (value !== null && value !== undefined) ? String(value) : "";
+            
+            if (padLeft) {
+                strVal = strVal.padStart(length, padChar);
+            } else {
+                strVal = strVal.padEnd(length, padChar);
+            }
+            
+            if (strVal.length > length) {
+                strVal = strVal.substring(0, length);
+            }
+            
+            const zeroBasedStart = startPos - 1;
+            for (let i = 0; i < length; i++) {
+                charArray[zeroBasedStart + i] = strVal[i];
+            }
+        }
+
         function exportCorrectedFileB() {
-            if (linesB.length === 0) return;
+            if (typeof linesB === "undefined" || linesB.length === 0) return;
 
             let fileBytesArray = [];
 
             linesB.forEach((lineB) => {
-                let sanitizedLine = sanitizeText(lineB);
+                let sanitizedLine = typeof sanitizeText === "function" ? sanitizeText(lineB) : lineB;
 
                 if (sanitizedLine.length < 1302) {
                     sanitizedLine = sanitizedLine.padEnd(1302, " ");
@@ -691,12 +751,124 @@
                     sanitizedLine = sanitizedLine.substring(0, 1302);
                 }
 
-                for (let i = 0; i < sanitizedLine.length; i++) {
-                    fileBytesArray.push(sanitizedLine.charCodeAt(i));
+                let charArray = sanitizedLine.split('');
+
+                // A. Artículo de la infracción (Pos: 41, Long: 3) -> Alineado a la derecha
+                let art = sanitizedLine.substring(40, 43).trim().replace(/^0+/, '');
+                setFieldValue(charArray, 41, 3, art, " ", true);
+
+                // B. Apartado de la infracción (Pos: 44, Long: 3) -> Alineado a la derecha
+                let apart = sanitizedLine.substring(43, 46).trim();
+                setFieldValue(charArray, 44, 3, apart, " ", true);
+
+                // C. Opción de la infracción (Pos: 47, Long: 3) -> Alineado a la derecha
+                let opcion = sanitizedLine.substring(46, 49).trim();
+                setFieldValue(charArray, 47, 3, opcion, " ", true);
+
+                // 1. Limpieza de Hecho Denunciado (Pos: 50, Long: 240)
+                setFieldValue(charArray, 50, 240, "", " ");
+
+                // D. Motivo de no notificación en mano (Pos: 391, Long: 4) -> "0007"
+                let motivo = sanitizedLine.substring(390, 394).trim().replace(/^0+/, '');
+                setFieldValue(charArray, 391, 4, motivo || "7", "0", true);
+
+                // E. Siglas de calle infracción (Pos: 400, Long: 5) -> Alineado a la derecha
+                let siglasCalle = sanitizedLine.substring(399, 404).trim();
+                setFieldValue(charArray, 400, 5, siglasCalle, " ", true);
+
+                // 2. Limpieza de Nombre de calle de infracción (Pos: 405, Long: 50)
+                setFieldValue(charArray, 405, 50, "", " ");
+
+                // 3. Formateo de Número 1 vía infracción (Pos: 455, Long: 4) -> Ceros izq.
+                let num1 = sanitizedLine.substring(454, 458).trim();
+                setFieldValue(charArray, 455, 4, num1 || "1", "0", true);
+
+                // 4. Limpieza/Mapeo de datos del infractor
+                setFieldValue(charArray, 560, 60, "", " ");   
+                setFieldValue(charArray, 620, 2, "", " ");    
+                setFieldValue(charArray, 622, 15, "", " ");   
+                setFieldValue(charArray, 637, 1, "", " ");    
+                setFieldValue(charArray, 638, 1, "F", " ");   
+                setFieldValue(charArray, 639, 5, "00000", "0"); 
+                setFieldValue(charArray, 644, 5, "", " ");    
+                setFieldValue(charArray, 649, 50, "", " ");   
+                setFieldValue(charArray, 699, 4, "0000", "0");  
+                setFieldValue(charArray, 704, 4, "0000", "0");  
+                setFieldValue(charArray, 710, 6, "000000", "0"); 
+                setFieldValue(charArray, 748, 3, "", " ");    
+                setFieldValue(charArray, 751, 4, "", " ");    
+                setFieldValue(charArray, 755, 5, "", " ");    
+                setFieldValue(charArray, 760, 3, "000", "0");   
+                setFieldValue(charArray, 763, 60, "", " ");   
+                setFieldValue(charArray, 823, 2, "00", "0");    
+                setFieldValue(charArray, 825, 60, "", " ");   
+                setFieldValue(charArray, 885, 3, "000", "0");   
+                setFieldValue(charArray, 888, 60, "", " ");   
+
+                // 5. Fecha expedición permiso (Pos: 1013, Long: 8)
+                let fechaExp = sanitizedLine.substring(1012, 1020).trim();
+                setFieldValue(charArray, 1013, 8, fechaExp || "0", "0", true);
+
+                // 6. Tipo de vehículo (Pos: 1071, Long: 4)
+                let tipoVeh = sanitizedLine.substring(1070, 1074).trim();
+                setFieldValue(charArray, 1071, 4, tipoVeh || "1", "0", true);
+
+                // 7. Marca del vehículo (Pos: 1075, Long: 20) -> Vacio / Espacios
+                setFieldValue(charArray, 1075, 20, "", " ");
+
+                // 8. TARA y Peso máximo (Pos: 1115 y 1121, Long: 6 c/u)
+                let tara = sanitizedLine.substring(1114, 1120).trim();
+                setFieldValue(charArray, 1115, 6, tara || "0", "0", true);
+
+                let pma = sanitizedLine.substring(1120, 1126).trim();
+                setFieldValue(charArray, 1121, 6, pma || "0", "0", true);
+
+                // 9. Observaciones (Pos: 1127, Long: 100) -> Alineado a la derecha
+                let obs = sanitizedLine.substring(1126, 1226).trim();
+                setFieldValue(charArray, 1127, 100, obs, " ", true);
+
+                // 10. Fecha inicio Ejercicio (Pos: 1227, Long: 4) -> "0000"
+                setFieldValue(charArray, 1227, 4, "0000", "0");
+
+                // 11. Bloques C60 (Pos: 1231 a 1302)
+                let refC60Sin = sanitizedLine.substring(1230, 1242).trim();
+                setFieldValue(charArray, 1231, 12, refC60Sin || "0", "0", true);
+
+                let conC60Sin = sanitizedLine.substring(1242, 1245).trim();
+                setFieldValue(charArray, 1243, 3, conC60Sin || "0", "0", true);
+
+                let remC60Sin = sanitizedLine.substring(1245, 1247).trim();
+                setFieldValue(charArray, 1246, 2, remC60Sin || "0", "0", true);
+
+                let fecC60Sin = sanitizedLine.substring(1247, 1255).trim();
+                setFieldValue(charArray, 1248, 8, fecC60Sin || "0", "0", true);
+
+                let impC60Sin = sanitizedLine.substring(1255, 1266).trim();
+                setFieldValue(charArray, 1256, 11, impC60Sin || "0", "0", true);
+
+                let refC60Con = sanitizedLine.substring(1266, 1278).trim();
+                setFieldValue(charArray, 1267, 12, refC60Con || "0", "0", true);
+
+                let conC60Con = sanitizedLine.substring(1278, 1281).trim();
+                setFieldValue(charArray, 1279, 3, conC60Con || "0", "0", true);
+
+                let remC60Con = sanitizedLine.substring(1281, 1283).trim();
+                setFieldValue(charArray, 1282, 2, remC60Con || "0", "0", true);
+
+                let fecC60Con = sanitizedLine.substring(1283, 1291).trim();
+                setFieldValue(charArray, 1284, 8, fecC60Con || "0", "0", true);
+
+                let impC60Con = sanitizedLine.substring(1291, 1302).trim();
+                setFieldValue(charArray, 1292, 11, impC60Con || "0", "0", true);
+
+                let finalLine = charArray.join('');
+
+                for (let i = 0; i < finalLine.length; i++) {
+                    fileBytesArray.push(finalLine.charCodeAt(i));
                 }
 
-                fileBytesArray.push(13); // CR (\r)
-                fileBytesArray.push(10); // LF (\n)
+                fileBytesArray.push(13); // CR
+                fileBytesArray.push(10); // LF
             });
 
             const uint8Array = new Uint8Array(fileBytesArray);
@@ -704,7 +876,7 @@
             
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
-            link.download = filenameB;
+            link.download = typeof filenameB !== "undefined" ? filenameB : "resultado.txt";
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
